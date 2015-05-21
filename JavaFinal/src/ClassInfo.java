@@ -72,7 +72,7 @@ public class ClassInfo {
 							}
 							if(context[k].contains("int")){
 								access[k] = accessTemp;
-								System.out.println(access[k]);
+								//System.out.println(access[k]);
 								type[k] = "int";
 							}
 							for(int l=k+1;l<k+3;k++) {
