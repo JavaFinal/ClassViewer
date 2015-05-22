@@ -1,33 +1,27 @@
 import java.io.*;
-import java.util.StringTokenizer;
 
 public class ReadFileData {
-	private StringBuffer buffer;
 	private FileInputStream file;
+	private Value v;
 	int b;
 	
-	public ReadFileData() {
+	public ReadFileData(String fileName) {
 		b=0;
-		buffer=new StringBuffer();
 		file = null;
+		v = new Value();
 		try{
-			file = new FileInputStream("Queue.cpp");
+			file = new FileInputStream(fileName);
 			b=file.read();
 			while(b!=-1){
-				buffer.append((char)b);
+				v.getBuffer().append((char)b);
 				b=file.read();
 			}
-//			System.out.println(buffer);
+//			System.out.println(v.getBuffer());
+//			v.setBuffer(v.getBuffer());
 		} catch(FileNotFoundException e){
 			System.out.println("Oops : FileNotFoundException");
 		} catch(IOException e){
 			System.out.println("Input error");
 		}
-	}
-	public StringBuffer getFileSB(){
-		return buffer;
-	}
-	public static void main(String[] args){
-		new ReadFileData();
 	}
 }

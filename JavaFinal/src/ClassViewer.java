@@ -2,25 +2,27 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-class ViewFrame extends JFrame implements ActionListener{
-	private JPanel left;
-	private JPanel right;
-	private JPanel treeP;
+class ViewFrame extends JFrame implements ActionListener, TreeSelectionListener{
+	private JPanel left, right, treeP;
 	private JTree tree;
-	private JTextArea useP;
-	private JTextArea text;
+	private JTextArea useP, text;
 	private JMenuBar menubar;
 	private JMenu File;
-	private JMenuItem Open;
-	private JMenuItem Save;
-	private JMenuItem Exit;
+	private JMenuItem Open, Save, Exit;
+	private JScrollPane spTree, spText;
+	private Value v;
+	private String[] classInfo={"Queue(void)","IsEmpty()", "IsFull()", "EnQueue(int)", "DeQueue()","~Queue(void)",
+			"arr:int[]","size:int","last:int","first:int"};
 	
 	public ViewFrame(){
 		setTitle("Class Viewer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(600,400);
+		
 		menubar=new JMenuBar();
 		File =new JMenu("File");
 		Open= new JMenuItem("Open");
@@ -41,18 +43,28 @@ class ViewFrame extends JFrame implements ActionListener{
 		treeP = new JPanel();
 		useP = new JTextArea("something");
 		DefaultMutableTreeNode root=new DefaultMutableTreeNode("Queue");
-		DefaultMutableTreeNode method1=new DefaultMutableTreeNode("Queue()");
-		DefaultMutableTreeNode method2=new DefaultMutableTreeNode("~Queue()");
-		root.add(method1);
-		root.add(method2);
+		for(int i=0;i<classInfo.length;i++){
+//			DefaultMutableTreeNode method1=new DefaultMutableTreeNode("Queue()");
+//			DefaultMutableTreeNode method2=new DefaultMutableTreeNode("~Queue()");
+			root.add(new DefaultMutableTreeNode(classInfo[i]));
+		}
 		tree = new JTree(root);
+		tree.addTreeSelectionListener(this);
 		treeP.add(tree);
-		left.add(treeP);
+		spTree = new JScrollPane(treeP);
+		spTree.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		spTree.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		left.add(spTree);
+//		left.add(treeP);
 		left.add(useP);
 	
 		right = new JPanel();
-		text = new JTextArea("something");
-		right.add(text);
+		text = new JTextArea(20,40);
+		spText = new JScrollPane(text);
+		spText.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		spText.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		right.add(spText);
+//		right.add(text);
 		add(left,BorderLayout.WEST);
 		add(right,BorderLayout.EAST);
 //		pack();
@@ -61,10 +73,14 @@ class ViewFrame extends JFrame implements ActionListener{
 
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == Open){
-			JFileChooser jfc=new JFileChooser();
-			jfc.showOpenDialog(this);
-			File f = jfc.getSelectedFile();
-			System.out.println(f.getAbsoluteFile());
+			JFileChooser jfc=new JFileChooser("C:\\Users\\user\\git\\ClassViewer\\JavaFinal");
+			v=new Value();
+			int choice = jfc.showOpenDialog(this);
+			if(choice==JFileChooser.APPROVE_OPTION){
+				File f = jfc.getSelectedFile();
+				v.setFileName(f.getName());
+				new ReadFileData(v.getFileName());
+			}
 		} else if(e.getSource() == Save){
 			JFileChooser jfc=new JFileChooser();
 			jfc.showSaveDialog(this);
@@ -73,6 +89,20 @@ class ViewFrame extends JFrame implements ActionListener{
 		} else if(e.getSource() == Exit){
 			System.exit(0);
 		}
+	}
+
+	public void valueChanged(TreeSelectionEvent e) {
+		String node=e.getNewLeadSelectionPath().getLastPathComponent().toString();
+		if(node.contains(":")){
+			text.setText("변수");
+		}
+		else if(node.contains("(")){
+				String[] currentM=node.split("\\(");
+//				System.out.println(currentM[0]);
+				MethodClass mc=new MethodClass(currentM[0]);
+				text.setText(mc.getMethod().toString());
+		}
+		
 	}
 }
 public class ClassViewer {

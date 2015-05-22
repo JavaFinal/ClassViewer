@@ -1,15 +1,14 @@
 import java.util.StringTokenizer;
 
 public class MethodFactor {
-	private ReadFileData rfd;
-	private StringBuffer buffer;
 	private String[] context;
 	private int i=0;
 	private int tokenNum;
+	private Value v;
+	
 	public MethodFactor(){
-		rfd=new ReadFileData();
-		buffer=rfd.getFileSB();
-		StringTokenizer st = new StringTokenizer(buffer.toString(),"\n\r	(){}",true);
+		v = new Value();
+		StringTokenizer st = new StringTokenizer(v.getBuffer().toString(),"\n\r	(){}",true);
 		tokenNum=st.countTokens();
 		context = new String[tokenNum];
 		while (st.hasMoreTokens()){
@@ -38,10 +37,4 @@ public class MethodFactor {
 			}
 		}
 	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		new MethodFactor();
-	}
-
 }
