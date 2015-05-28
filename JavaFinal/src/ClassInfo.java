@@ -6,9 +6,13 @@ public class ClassInfo {
 	private String[] context;
 	private int i=0;
 	private int tokenNum;
-	private String[] nameM, nameD;
-	private String[] typeM, typeD;
-	private String[] accessM, accessD;
+//	private String[] nameM, nameD;
+//	private String[] typeM, typeD;
+//	private String[] accessM, accessD;
+	private ArrayList<String> nameM, nameD;
+	private ArrayList<String> typeM, typeD;
+	private ArrayList<String> accessM, accessD;
+
 	public static String className=null;
 		
 	public ClassInfo(){
@@ -17,12 +21,12 @@ public class ClassInfo {
 		StringTokenizer st = new StringTokenizer(buffer.toString()," \t\n\r	{}: ",false);
 		tokenNum=st.countTokens();
 		context = new String[tokenNum];
-		nameM = new String[tokenNum];
-		accessM = new String[tokenNum];
-		typeM = new String[tokenNum];
-		nameD = new String[tokenNum];
-		accessD = new String[tokenNum];
-		typeD = new String[tokenNum];
+		nameM = new ArrayList<String>();
+		accessM = new ArrayList<String>();
+		typeM = new ArrayList<String>();
+		nameD = new ArrayList<String>();
+		accessD = new ArrayList<String>();
+		typeD = new ArrayList<String>();
 		
 		while (st.hasMoreTokens()){
 			String token=st.nextToken();
@@ -34,7 +38,6 @@ public class ClassInfo {
 	}
 	
 	public void ClassPrint(int tokenNum) {
-		int cntM=0, cntD=0;
 		for (i=0;i<tokenNum;i++){
 			if(context[i].contains("class")){
 				className = context[i+1];
@@ -47,17 +50,15 @@ public class ClassInfo {
 							}
 							if(context[k].contains(";")){ // �޼ҵ� ���� ������ �ش��ϴ� ��� ����
 								if(!context[k-1].contains(";")&&!context[k-1].equals(accessTemp)){
-									typeM[cntM] = context[k-1];
+									typeM.add(context[k-1]);
 									String[] n=context[k].split(";");;
-									nameM[cntM]=n[0];
-									accessM[cntM] = accessTemp;
-									cntM++;
+									nameM.add(n[0]);
+									accessM.add(accessTemp);
 								} else{
-									typeM[cntM] = "void";
+									typeM.add("void");
 									String[] n=context[k].split(";");;
-									nameM[cntM]=n[0];
-									accessM[cntM] = accessTemp;
-									cntM++;
+									nameM.add(n[0]);
+									accessM.add(accessTemp);
 								}
 							}
 						}					
@@ -68,17 +69,16 @@ public class ClassInfo {
 								break;
 							}
 							if(context[k].contains(";")){
-								accessD[cntD] = accessTemp;
+								accessD.add(accessTemp);
 								if(context[k].contains("[")){
 									String[] n=context[k].split("\\[");;
-									nameD[cntD]=n[0];
-									typeD[cntD] = context[k-1]+"[]";
+									nameD.add(n[0]);
+									typeD.add(context[k-1]+"[]");
 								} else{
 									String[] n=context[k].split(";");;
-									nameD[cntD]=n[0];
-									typeD[cntD] = context[k-1];
+									nameD.add(n[0]);
+									typeD.add(context[k-1]);
 								}
-								cntD++;
 								//System.out.println(access[k]);
 							}
 						}
@@ -87,27 +87,27 @@ public class ClassInfo {
 				break;
 			}
 		}
-/*		for(int z=0; z<cntM;z++)
-		System.out.println(nameM[z]+" "+typeM[z]+" "+accessM[z]);
-		for(int z=0; z<cntD;z++)
-		System.out.println(nameD[z]+" "+typeD[z]+" "+accessD[z]);*/
+/*		for(int z=0; z<nameM.size();z++)
+		System.out.println(nameM.get(z)+" "+typeM.get(z)+" "+accessM.get(z));
+		for(int z=0; z<nameD.size();z++)
+		System.out.println(nameD.get(z)+" "+typeD.get(z)+" "+accessD.get(z));*/
 	}
-	public String[] getMName(){
+	public ArrayList<String> getMName(){
 		return nameM;
 	}
-	public String[] getMType(){
+	public ArrayList<String> getMType(){
 		return typeM;
 	}
-	public String[] getMAccess(){
+	public ArrayList<String> getMAccess(){
 		return accessM;
 	}
-	public String[] getDName(){
+	public ArrayList<String> getDName(){
 		return nameD;
 	}
-	public String[] getDType(){
+	public ArrayList<String> getDType(){
 		return typeD;
 	}
-	public String[] getDAccess(){
+	public ArrayList<String> getDAccess(){
 		return accessD;
 	}
 }

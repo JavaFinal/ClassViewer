@@ -7,17 +7,18 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 class ViewFrame extends JFrame implements ActionListener, TreeSelectionListener{
-	private JPanel left, right, treeP;
+	private JPanel left = new JPanel();
+	private JPanel right;
+	private JPanel treeP = new JPanel();
 	private JTree tree;
 	private JTextArea useP, text;
 	private JMenuBar menubar;
 	private JMenu File;
 	private JMenuItem Open, Save, Exit;
 	private JScrollPane spTree, spText;
+	private ClassInfo ci;
 	private Value v;
-	private String[] classInfo={"Queue(void)","IsEmpty()", "IsFull()", "EnQueue(int)", "DeQueue()","~Queue(void)",
-			"arr:int[]","size:int","last:int","first:int"};
-	
+	private DefaultMutableTreeNode root;
 	public ViewFrame(){
 		setTitle("Class Viewer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -38,35 +39,17 @@ class ViewFrame extends JFrame implements ActionListener, TreeSelectionListener{
 		Save.addActionListener(this);
 		Exit.addActionListener(this);
 		
-		left = new JPanel();
 		left.setLayout(new GridLayout(0,1));
-		treeP = new JPanel();
 		useP = new JTextArea("something");
-		
-		DefaultMutableTreeNode root=new DefaultMutableTreeNode("Queue");
-		ClassInfo ci=new ClassInfo();
-		for(int i=0;i<classInfo.length;i++){
-//			DefaultMutableTreeNode method1=new DefaultMutableTreeNode("Queue()");
-//			DefaultMutableTreeNode method2=new DefaultMutableTreeNode("~Queue()");
-			root.add(new DefaultMutableTreeNode(classInfo[i]));
-		}
-		tree = new JTree(root);
-		tree.addTreeSelectionListener(this);
-		treeP.add(tree);
-		spTree = new JScrollPane(treeP);
-		spTree.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		spTree.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		left.add(spTree);
-//		left.add(treeP);
 		left.add(useP);
-	
+
 		right = new JPanel();
 		text = new JTextArea(20,40);
 		spText = new JScrollPane(text);
 		spText.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		spText.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		right.add(spText);
-//		right.add(text);
+
 		add(left,BorderLayout.WEST);
 		add(right,BorderLayout.EAST);
 //		pack();
@@ -82,7 +65,7 @@ class ViewFrame extends JFrame implements ActionListener, TreeSelectionListener{
 				File f = jfc.getSelectedFile();
 				v.setFileName(f.getName());
 				new ReadFileData(v.getFileName());
-				new ClassInfo();
+				makeTree();
 			}
 		} else if(e.getSource() == Save){
 			JFileChooser jfc=new JFileChooser();
@@ -94,8 +77,31 @@ class ViewFrame extends JFrame implements ActionListener, TreeSelectionListener{
 		}
 	}
 
+	private void makeTree() {
+		// TODO Auto-generated method stub
+		ci=new ClassInfo();
+		
+		DefaultMutableTreeNode root=new DefaultMutableTreeNode(ci.className);
+		for(int i=0;i<ci.getMName().size();i++){
+			root.add(new DefaultMutableTreeNode(ci.getMName().get(i)));
+		}
+		for(int i=0;i<ci.getDName().size();i++){
+			root.add(new DefaultMutableTreeNode(ci.getDName().get(i)+":"+ci.getDType().get(i)));
+		}
+		tree = new JTree(root);
+		tree.addTreeSelectionListener(this);
+		treeP.add(tree);
+		spTree = new JScrollPane(treeP);
+		spTree.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		spTree.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		left.add(spTree);
+		left.add(useP);
+		setVisible(true);
+	}
+
 	public void valueChanged(TreeSelectionEvent e) {
 		String node=e.getNewLeadSelectionPath().getLastPathComponent().toString();
+		ci=new ClassInfo();
 		if(node.contains(":")){
 			text.setText("변수");
 		}
@@ -104,6 +110,8 @@ class ViewFrame extends JFrame implements ActionListener, TreeSelectionListener{
 //				System.out.println(currentM[0]);
 				MethodClass mc=new MethodClass(currentM[0]);
 				text.setText(mc.getMethod().toString());
+		} else if(node.equals(ci.className)){
+				text.setText("NAME | "+"TYPE | "+"ACCESS");
 		}
 		
 	}
