@@ -42,7 +42,9 @@ class ViewFrame extends JFrame implements ActionListener, TreeSelectionListener{
 		left.setLayout(new GridLayout(0,1));
 		treeP = new JPanel();
 		useP = new JTextArea("something");
+		
 		DefaultMutableTreeNode root=new DefaultMutableTreeNode("Queue");
+		ClassInfo ci=new ClassInfo();
 		for(int i=0;i<classInfo.length;i++){
 //			DefaultMutableTreeNode method1=new DefaultMutableTreeNode("Queue()");
 //			DefaultMutableTreeNode method2=new DefaultMutableTreeNode("~Queue()");
@@ -80,6 +82,7 @@ class ViewFrame extends JFrame implements ActionListener, TreeSelectionListener{
 				File f = jfc.getSelectedFile();
 				v.setFileName(f.getName());
 				new ReadFileData(v.getFileName());
+				new ClassInfo();
 			}
 		} else if(e.getSource() == Save){
 			JFileChooser jfc=new JFileChooser();
