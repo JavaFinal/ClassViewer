@@ -1,7 +1,6 @@
 import java.util.*;
 
 public class KeywordClass {
-	private Value v;
 	private StringBuffer buffer;
 	private String[] context;
 	private int i=0;
@@ -12,8 +11,7 @@ public class KeywordClass {
 	private int j=0;
 	
 	public KeywordClass(){
-		v=new Value();
-		buffer=v.getBuffer();
+		buffer=Value.buffer;
 		StringTokenizer st = new StringTokenizer(buffer.toString()," \n\r	():;{}",true);
 		tokenNum=st.countTokens();
 		context = new String[tokenNum];

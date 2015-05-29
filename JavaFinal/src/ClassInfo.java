@@ -6,9 +6,6 @@ public class ClassInfo {
 	private String[] context;
 	private int i=0;
 	private int tokenNum;
-//	private String[] nameM, nameD;
-//	private String[] typeM, typeD;
-//	private String[] accessM, accessD;
 	private ArrayList<String> nameM, nameD;
 	private ArrayList<String> typeM, typeD;
 	private ArrayList<String> accessM, accessD;
@@ -17,7 +14,7 @@ public class ClassInfo {
 		
 	public ClassInfo(){
 		v = new Value();
-		buffer=v.getBuffer();
+		buffer=Value.buffer;
 		StringTokenizer st = new StringTokenizer(buffer.toString()," \t\n\r	{}: ",false);
 		tokenNum=st.countTokens();
 		context = new String[tokenNum];

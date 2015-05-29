@@ -4,11 +4,9 @@ public class MethodFactor {
 	private String[] context;
 	private int i=0;
 	private int tokenNum;
-	private Value v;
 	
 	public MethodFactor(){
-		v = new Value();
-		StringTokenizer st = new StringTokenizer(v.getBuffer().toString(),"\n\r	(){}",true);
+		StringTokenizer st = new StringTokenizer(Value.buffer.toString(),"\n\r	(){}",true);
 		tokenNum=st.countTokens();
 		context = new String[tokenNum];
 		while (st.hasMoreTokens()){

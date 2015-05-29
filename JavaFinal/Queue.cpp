@@ -51,3 +51,6 @@ int Queue::DeQueue()
 		first = (first+1)%size;
 	}
 }
+
+
+

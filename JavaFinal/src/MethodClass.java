@@ -6,13 +6,11 @@ public class MethodClass {
 	private int i=0;
 	private int tokenNum;
 	private StringBuffer method;
-	private Value v;
-	private String node1;
+
+	private String node;
 	public MethodClass(String cNode){
-		this.node1=cNode;
-//		System.out.println(this.node);
-		v=new Value();
-		StringTokenizer st = new StringTokenizer(v.getBuffer().toString(),"\n\r	(){}",true);
+		this.node=cNode;
+		StringTokenizer st = new StringTokenizer(Value.buffer.toString(),"\n\r	(){}",true);
 //		System.out.println(v.getBuffer());
 		tokenNum=st.countTokens();
 		context = new String[tokenNum];
@@ -30,44 +28,25 @@ public class MethodClass {
 	public void printMethod1(int tokenNum){
 		int flag1=0;
 		int flag2=0;
+		ClassInfo ci = new ClassInfo();
 		for (int k=0;k<tokenNum;k++){
-			if(context[k].contains("Queue::"+node1)){
+			if(context[k].contains(ci.className+"::"+node)){
 				for(int j=k+1;j<tokenNum;j++){
 					if(context[j].equals("{"))
 						flag1++;
 					if(context[j].equals("}"))
 						flag2++;
 					if(flag1!=flag2){
-						if(context[j].equals("{")&&flag1==1){}
-						else method=method.append(context[j]);
+						if(!(context[j].equals("{")&&flag1==1)){
+							method=method.append(context[j]);
+//							System.out.println(j);
+						}
 					} else if(flag1==flag2&&flag1!=0&&flag2!=0)
 						break;
 				}
 			}
 		}
 	}
-/*	
-	public void printMethod(int tokenNum){
-		for (i=0;i<tokenNum;i++){
-			if(context[i].contains("Queue::"+node1)){
-				for(int j=i+1;j<tokenNum;j++){
-					if(context[j].equals("{")){
-						method=method.append(context[j]);
-//						System.out.print(context[j]);
-						for(int k=j+1;k<tokenNum;k++){
-							if(context[k].contains("Queue::"))
-								break;
-							method=method.append(context[k]);
-//							System.out.print(context[k]);
-						}
-						break;
-					}
-				}
-				break;
-			}
-		}
-	}
-*/
 	public StringBuffer getMethod() {
 		// TODO Auto-generated method stub
 		return method;

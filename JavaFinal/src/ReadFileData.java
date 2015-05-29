@@ -1,3 +1,8 @@
+/* ReadFileData 클래스
+ * 
+ * 
+ */
+
 import java.io.*;
 
 public class ReadFileData {
@@ -5,15 +10,15 @@ public class ReadFileData {
 	private Value v;
 	int b;
 	
-	public ReadFileData(String fileName) {
+	public ReadFileData(File f) {
 		b=0;
 		file = null;
 		v = new Value();
 		try{
-			file = new FileInputStream(fileName);
+			file = new FileInputStream(f);
 			b=file.read();
 			while(b!=-1){
-				v.getBuffer().append((char)b);
+				Value.buffer.append((char)b);
 				b=file.read();
 			}
 //			System.out.println(v.getBuffer());
